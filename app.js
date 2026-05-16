@@ -21,7 +21,6 @@ function generateExpiryOptions() {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const options = [];
 
-  // 只產生當月和下個月
   for (let offset = 0; offset <= 1; offset++) {
     const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
     const year = d.getFullYear();
@@ -31,22 +30,20 @@ function generateExpiryOptions() {
 
     const wednesdays = [], fridays = [];
     for (let day = 1; day <= days; day++) {
-      const date = new Date(year, month, day);
-      const dow = date.getDay();
-      if (dow === 3) wednesdays.push({ date, day });
-      if (dow === 5) fridays.push({ date, day });
+      const dt = new Date(year, month, day);
+      if (dt.getDay() === 3) wednesdays.push(dt);
+      if (dt.getDay() === 5) fridays.push(dt);
     }
 
-    wednesdays.forEach(({ date }, i) => {
-      if (date >= today) {
-        if (i === 2) options.push(mm);
-        else if (i < 2) options.push(`${mm}w${i + 1}`);
-        else options.push(`${mm}w${i + 1}`);
+    wednesdays.forEach((dt, i) => {
+      if (dt >= today) {
+        if (i === 2) options.push(mm); // 第三個週三 = 月選
+        else options.push(`${mm}w${i + 1}`); // w1, w2, w4, w5
       }
     });
 
-    fridays.forEach(({ date }, i) => {
-      if (date >= today) options.push(`${mm}F${i + 1}`);
+    fridays.forEach((dt, i) => {
+      if (dt >= today) options.push(`${mm}F${i + 1}`);
     });
   }
 
