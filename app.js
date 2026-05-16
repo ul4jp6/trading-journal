@@ -44,8 +44,6 @@ function generateExpiryOptions() {
       if (date >= today) options.push(`${mm}w${i + 1}`);
     });
 
-    // 月選標籤（只有最後一個週三還未到期才顯示）
-    if (monthExpiry && monthExpiry >= today) options.push(mm);
 
     fridays.forEach(({ date }, i) => {
       if (date >= today) options.push(`${mm}F${i + 1}`);
