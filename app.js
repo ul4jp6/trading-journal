@@ -37,13 +37,9 @@ function generateExpiryOptions() {
       if (dow === 5) fridays.push({ date, day });
     }
 
-    // 月選（最後一個週三）
-    const monthExpiry = wednesdays.length > 0 ? wednesdays[wednesdays.length - 1].date : null;
-
     wednesdays.forEach(({ date }, i) => {
       if (date >= today) options.push(`${mm}w${i + 1}`);
     });
-
 
     fridays.forEach(({ date }, i) => {
       if (date >= today) options.push(`${mm}F${i + 1}`);
