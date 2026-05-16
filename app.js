@@ -16,30 +16,42 @@ async function gsSet(key, value) {
 
 const POINT_VALUE = { "微台": 10, "選擇權": 50 };
 
-function getOptionsExpiryList(year, month) {
-  const m = month - 1;
-  const days = new Date(year, m + 1, 0).getDate();
-  const wednesdays = [], fridays = [];
-  for (let d = 1; d <= days; d++) {
-    const day = new Date(year, m, d).getDay();
-    if (day === 3) wednesdays.push(d);
-    if (day === 5) fridays.push(d);
-  }
-  const mm = String(month).padStart(2, "0");
-  const list = [];
-  wednesdays.forEach((_, i) => list.push(`${mm}w${i + 1}`));
-  list.push(mm);
-  fridays.forEach((_, i) => list.push(`${mm}F${i + 1}`));
-  return list;
-}
-
 function generateExpiryOptions() {
   const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const options = [];
-  for (let offset = -1; offset <= 2; offset++) {
+
+  // 只產生當月和下個月
+  for (let offset = 0; offset <= 1; offset++) {
     const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
-    getOptionsExpiryList(d.getFullYear(), d.getMonth() + 1).forEach(v => options.push(v));
+    const year = d.getFullYear();
+    const month = d.getMonth();
+    const mm = String(month + 1).padStart(2, "0");
+    const days = new Date(year, month + 1, 0).getDate();
+
+    const wednesdays = [], fridays = [];
+    for (let day = 1; day <= days; day++) {
+      const date = new Date(year, month, day);
+      const dow = date.getDay();
+      if (dow === 3) wednesdays.push({ date, day });
+      if (dow === 5) fridays.push({ date, day });
+    }
+
+    // 月選（最後一個週三）
+    const monthExpiry = wednesdays.length > 0 ? wednesdays[wednesdays.length - 1].date : null;
+
+    wednesdays.forEach(({ date }, i) => {
+      if (date >= today) options.push(`${mm}w${i + 1}`);
+    });
+
+    // 月選標籤（只有最後一個週三還未到期才顯示）
+    if (monthExpiry && monthExpiry >= today) options.push(mm);
+
+    fridays.forEach(({ date }, i) => {
+      if (date >= today) options.push(`${mm}F${i + 1}`);
+    });
   }
+
   return [...new Set(options)];
 }
 
