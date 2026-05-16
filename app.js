@@ -38,7 +38,11 @@ function generateExpiryOptions() {
     }
 
     wednesdays.forEach(({ date }, i) => {
-      if (date >= today) options.push(`${mm}w${i + 1}`);
+      if (date >= today) {
+        if (i === 2) options.push(mm);
+        else if (i < 2) options.push(`${mm}w${i + 1}`);
+        else options.push(`${mm}w${i + 1}`);
+      }
     });
 
     fridays.forEach(({ date }, i) => {
