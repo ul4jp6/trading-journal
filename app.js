@@ -202,7 +202,7 @@ function TradesTab({ trades, saveTrades, pnlMap }) {
           React.createElement("button", { key: f, style: { ...s.chip, ...(filter === f ? s.chipActive : {}) }, onClick: () => setFilter(f) }, f === "all" ? "全部" : f)
         )
       ),
-      React.createElement("button", { style: s.addBtn, onClick: () => setShowForm(v => !v) }, "＋ 新增")
+      React.createElement("button", { style: s.addBtn, onClick: () => { setForm(defaultTradeForm()); setShowForm(v => !v); } }, "＋ 新增")
     ),
     showForm && React.createElement("div", { style: s.formCard },
       React.createElement("div", { style: s.formGrid },
