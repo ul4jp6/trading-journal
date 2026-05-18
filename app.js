@@ -53,7 +53,11 @@ function generateExpiryOptions() {
 const EXPIRY_OPTIONS = generateExpiryOptions();
 const { useState, useEffect } = React;
 
-function nowStr() { return new Date().toISOString().slice(0, 16); }
+function nowStr() {
+  const now = new Date();
+  const tw = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+  return tw.toISOString().slice(0, 16);
+}
 function fmtDate(iso) { return iso ? iso.replace("T", " ").slice(0, 16) : ""; }
 function fmtMoney(n) {
   if (n == null) return "";
